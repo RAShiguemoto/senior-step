@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: senior-step
+  datasource:
+    url: jdbc:postgresql://localhost:5432/seniorstep_db
+    username: devuser
+    password: devpassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
