@@ -3,6 +3,7 @@ package com.seniorstep.planner.domain.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.seniorstep.planner.domain.exception.ScheduleConflictException;
 import com.seniorstep.planner.domain.model.StudySlot;
 import com.seniorstep.planner.domain.repository.StudySlotRepository;
 import com.seniorstep.planner.infra.controller.dto.StudySlotRequest;
@@ -20,7 +21,7 @@ public class StudySlotService {
 	@Transactional
     public StudySlotResponse  create(StudySlotRequest request) {
 		if (repository.existsOverlapping(request.startDateTime(), request.endDateTime())) {
-	        throw new RuntimeException("Schedule conflict!");
+	        throw new ScheduleConflictException("Schedule conflict!");
 	    }
 				
 		StudySlot entity = StudySlot.builder()
