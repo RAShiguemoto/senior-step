@@ -1,4 +1,4 @@
-package com.seniorstep.planner.domain.service;
+ package com.seniorstep.planner.domain.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,7 @@ public class StudySlotService {
 	@Transactional
     public StudySlotResponse  create(StudySlotRequest request) {
 		if (repository.existsOverlapping(request.startDateTime(), request.endDateTime())) {
-	        throw new ScheduleConflictException("Schedule conflict!");
+	        throw new ScheduleConflictException();
 	    }
 				
 		StudySlot entity = StudySlot.builder()
