@@ -1,5 +1,7 @@
  package com.seniorstep.planner.domain.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,4 +43,27 @@ public class StudySlotService {
                 saved.isCompleted()
         );
     }
+	
+	@Transactional(readOnly = true)
+	public Page<StudySlotResponse> findAll(Boolean completed, Pageable pageable) {
+	    Page<StudySlot> page;
+	    
+	    if (completed != null) {
+	        page = repository.findByCompleted(completed, pageable);
+	    } else {
+	        page = repository.findAll(pageable);
+	    }
+
+	    return page.map(this::toResponse);
+	}
+	
+	private StudySlotResponse toResponse(StudySlot slot) {
+	    return new StudySlotResponse(
+	            slot.getId(),
+	            slot.getTitle(),
+	            slot.getStartDateTime(),
+	            slot.getEndDateTime(),
+	            slot.isCompleted()
+	    );
+	}
 }
