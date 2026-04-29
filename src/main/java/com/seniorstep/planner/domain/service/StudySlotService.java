@@ -7,19 +7,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.seniorstep.planner.domain.exception.ResourceNotFoundException;
 import com.seniorstep.planner.domain.exception.ScheduleConflictException;
+import com.seniorstep.planner.domain.model.NotificationType;
 import com.seniorstep.planner.domain.model.StudySlot;
 import com.seniorstep.planner.domain.repository.StudySlotRepository;
 import com.seniorstep.planner.infra.controller.dto.StudySlotRequest;
 import com.seniorstep.planner.infra.controller.dto.StudySlotResponse;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class StudySlotService {
 
 	private final StudySlotRepository repository;
-
-	public StudySlotService(StudySlotRepository repository) {
-        this.repository = repository;
-    }
+	private final NotificationService notificationService;
 	
 	@Transactional
     public StudySlotResponse  create(StudySlotRequest request) {
@@ -35,14 +36,10 @@ public class StudySlotService {
 	            .build();
 		
 		StudySlot saved = repository.save(entity);
+		
+		notificationService.notify(saved, NotificationType.LOG);
 
-        return new StudySlotResponse(
-                saved.getId(),
-                saved.getTitle(),
-                saved.getStartDateTime(),
-                saved.getEndDateTime(),
-                saved.isCompleted()
-        );
+        return toResponse(saved);
     }
 	
 	@Transactional(readOnly = true)
