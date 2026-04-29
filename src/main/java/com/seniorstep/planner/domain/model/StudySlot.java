@@ -38,7 +38,6 @@ public class StudySlot {
 	private String title;
 	
 	@NotNull(message = "Start time is mandatory")
-	@Future(message = "Start time must be in the future")
 	@Column(name = "start_date_time", nullable = false)
 	private LocalDateTime startDateTime;
 	

@@ -8,7 +8,11 @@ import jakarta.validation.constraints.NotNull;
 
 public record StudySlotRequest(
 	@NotBlank String title,
-	@NotNull @Future LocalDateTime startDateTime,
+	
+	@NotNull 
+	@Future(message = "Start time must be in the future") 
+	LocalDateTime startDateTime,
+	
 	@NotNull LocalDateTime endDateTime
 ) {
 	public StudySlotRequest {

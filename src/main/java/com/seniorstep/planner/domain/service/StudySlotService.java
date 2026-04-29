@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.seniorstep.planner.domain.exception.ResourceNotFoundException;
 import com.seniorstep.planner.domain.exception.ScheduleConflictException;
 import com.seniorstep.planner.domain.model.StudySlot;
 import com.seniorstep.planner.domain.repository.StudySlotRepository;
@@ -55,6 +56,17 @@ public class StudySlotService {
 	    }
 
 	    return page.map(this::toResponse);
+	}
+	
+	@Transactional
+	public StudySlotResponse complete(Long id) {
+	    return repository.findById(id)
+	            .map(slot -> {
+	                slot.setCompleted(true);
+	                return repository.save(slot);
+	            })
+	            .map(this::toResponse)
+	            .orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
 	private StudySlotResponse toResponse(StudySlot slot) {

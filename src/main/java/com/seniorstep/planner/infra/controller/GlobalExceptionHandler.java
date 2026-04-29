@@ -7,6 +7,7 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.seniorstep.planner.domain.exception.ResourceNotFoundException;
 import com.seniorstep.planner.domain.exception.ScheduleConflictException;
 
 @RestControllerAdvice
@@ -19,6 +20,17 @@ public class GlobalExceptionHandler {
                 HttpStatus.CONFLICT, ex.getMessage());
         
         problemDetail.setTitle("Schedule Conflict");
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
+	
+	@ExceptionHandler(ResourceNotFoundException.class)
+    public ProblemDetail handleScheduleConflict(ResourceNotFoundException ex) {
+
+		ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND, ex.getMessage());
+        
+        problemDetail.setTitle("Resource Not Found");
         problemDetail.setProperty("timestamp", Instant.now());
         return problemDetail;
     }
