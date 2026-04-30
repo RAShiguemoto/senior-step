@@ -10,13 +10,17 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         highlight_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  threads:
+    virtual:
+      enabled: true
 
 management:
   endpoints:
@@ -30,3 +34,8 @@ management:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+api:
+  telegram:
+    token: ${TELEGRAM_TOKEN}
+    chat-id: ${TELEGRAM_CHAT_ID}

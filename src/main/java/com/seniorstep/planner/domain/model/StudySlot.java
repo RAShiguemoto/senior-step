@@ -47,4 +47,6 @@ public class StudySlot {
 	
 	private boolean completed = false;
 	
+	private boolean notificationSent = false;
+	
 }

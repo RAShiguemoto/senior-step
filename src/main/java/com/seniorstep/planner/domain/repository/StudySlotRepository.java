@@ -1,6 +1,7 @@
 package com.seniorstep.planner.domain.repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,4 +19,6 @@ public interface StudySlotRepository extends JpaRepository<StudySlot, Long>{
 	boolean existsOverlapping(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 	
 	Page<StudySlot> findByCompleted(boolean completed, Pageable pageable);
+
+	List<StudySlot> findByStartDateTimeBeforeAndNotificationSentFalse(LocalDateTime windowEnd);
 }
