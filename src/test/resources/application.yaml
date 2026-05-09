@@ -4,10 +4,17 @@ spring:
        enabled: false
 
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop # ESSENCIAL: Cria as tabelas no Postgres do Docker
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        # Dialeto correto para o Hibernate falar a língua do Postgres
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 api:
   telegram:
