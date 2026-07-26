@@ -1,14 +1,20 @@
-# Estágio 1: Compilação (Build)
-FROM maven:3.9.10-eclipse-temurin-25-alpine AS build
+# Estágio 1: Compilação (Build usando o Java 25 + Maven Wrapper)
+FROM eclipse-temurin:25-jdk-alpine AS build
 WORKDIR /app
-COPY . .
-RUN mvn clean package -DskipTests
 
-# Estágio 2: Execução (Run)
+# Copia os arquivos do Maven Wrapper primeiro (para aproveitar o cache do Docker)
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN chmod +x mvnw
+RUN ./mvnw dependency:go-offline -B
+
+# Copia o código-fonte e gera o pacote
+COPY src ./src
+RUN ./mvnw clean package -DskipTests
+
+# Estágio 2: Execução (Imagem leve de Runtime)
 FROM eclipse-temurin:25-jre-alpine
 WORKDIR /app
-# Copia o JAR gerado no estágio anterior
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-# Comando para rodar a aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
