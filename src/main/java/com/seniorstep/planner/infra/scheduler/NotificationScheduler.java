@@ -3,6 +3,8 @@ package com.seniorstep.planner.infra.scheduler;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +25,21 @@ public class NotificationScheduler {
 	private final StudySlotRepository repository;
 	private final NotificationService notificationService;
 	
+	private boolean isReady = false;
+	
+	@EventListener(ApplicationReadyEvent.class)
+    public void onReady() {
+        this.isReady = true;
+    }
+	
 	@Scheduled(fixedDelay = 60000)
     @Transactional
 	public void checkAndNotify() {
+		if (!isReady) {
+            log.info("System not ready yet, skipping notification check...");
+            return;
+        }
+		
         LocalDateTime windowStart = LocalDateTime.now();
         LocalDateTime windowEnd = windowStart.plusMinutes(20);
 
